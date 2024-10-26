@@ -108,8 +108,8 @@ const Auth = () => {
     toast.error("Try again later");
   }
   } catch (error) {
-    console.error('Signup failed:', err);
-    toast.error(err?.data?.loginResponse?.message || "Signup || Login failed. Please try again.");
+    console.error('Signup failed:', error);
+    toast.error(error?.data?.loginResponse?.message || "Signup || Login failed. Please try again.");
   }
   };
 
