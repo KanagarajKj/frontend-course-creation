@@ -1,85 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBook, FaCog, FaUser, FaQuestionCircle, FaSignOutAlt, FaGithub, FaEnvelope } from 'react-icons/fa';
+import { Home, BookOpen, Settings, User, HelpCircle, LogOut, X, Album, FilePlus2 } from 'lucide-react';
 import LogoutModal from './Modals/LogoutModals';
 
-const Sidebar = React.forwardRef(({ isOpen, toggleSidebar }, ref) => {
+const Sidebar = forwardRef(({ isOpen, toggleSidebar }, ref) => {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const handleLogoutClick = () => setShowLogoutPopup(true);
+
+  const menuItems = [
+    { icon: <Home className="w-5 h-5" />, text: 'Home' , to:"/home"},
+    { icon: <BookOpen className="w-5 h-5" />, text: 'My Courses', to:"/my-courses" },
+    { icon: <FilePlus2 className="w-5 h-5" />, text: 'Create Courses', to:"/create-courses" },
+    { icon: <User className="w-5 h-5" />, text: 'Profile', to: "/profile" },
+    { icon: <Settings className="w-5 h-5" />, text: 'Settings', to: "/settings" },
+  ];
 
   return (
     <>
       <div
         ref={ref}
-        className={`flex flex-col h-screen w-64 bg-primary-50 text-gray-800 p-4 fixed md:relative transition-transform duration-300 ease-in-out 
-          ${isOpen ? 'translate-x-0 top-0' : '-translate-x-full md:translate-x-0'}`}
+        className={`w-64 min-h-screen bg-white border-r border-gray-200 px-4 py-6 fixed md:relative transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0 top-0' : '-translate-x-full md:translate-x-0'}`}
       >
-        <h2 className="text-2xl font-bold mb-6">Sidebar</h2>
-
-        {/* Close Button for Mobile View */}
-        <button
-          className="md:hidden p-2 bg-primary-600 rounded mb-6 text-white font-bold"
-          onClick={toggleSidebar}
-        >
-          Close
-        </button>
-
-        {/* Top Links */}
-        <ul className="flex-grow space-y-4">
-          <li>
-            <Link to="/" className="flex items-center hover:text-primary-600" onClick={toggleSidebar}>
-              <FaHome className="mr-2" /> Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/my-courses" className="flex items-center hover:text-primary-600" onClick={toggleSidebar}>
-              <FaBook className="mr-2" /> My Courses
-            </Link>
-          </li>
-          <li>
-            <Link to="/profile" className="flex items-center hover:text-primary-600" onClick={toggleSidebar}>
-              <FaUser className="mr-2" /> Profile
-            </Link>
-          </li>
-          <li>
-            <Link to="/help" className="flex items-center hover:text-primary-600" onClick={toggleSidebar}>
-              <FaQuestionCircle className="mr-2" /> Help
-            </Link>
-          </li>
-        </ul>
-
-        {/* Bottom Links */}
-        <ul className="mt-auto space-y-4">
-          <li>
-            <Link to="/settings" className="flex items-center hover:text-primary-600" onClick={toggleSidebar}>
-              <FaCog className="mr-2" /> Settings
-            </Link>
-          </li>
-          <li>
-            <button
-              className="flex items-center hover:text-primary-600 w-full text-left"
-              onClick={handleLogoutClick}
-            >
-              <FaSignOutAlt className="mr-2" /> Logout
-            </button>
-          </li>
-
-          {/* Social Media Icons */}
-          <div className="flex items-center space-x-4 text-gray-600 mt-4">
-            <a href="mailto:example@gmail.com" target="_blank" rel="noopener noreferrer">
-              <FaEnvelope className="h-6 w-6 hover:text-primary-600" />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-              <FaGithub className="h-6 w-6 hover:text-primary-600" />
-            </a>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-2 text-purple-600">
+            <Album className="w-8 h-8" />
+            <span className="text-2xl font-bold tracking-wide">COURSE</span>
           </div>
-        </ul>
+          {isOpen && 
+          (<div onClick={toggleSidebar}>
+            <span className="text-xl font-semibold">
+            <X className="w-5 h-5" />
+            </span>
+          </div>
+          )}
+        </div>
+
+        <nav className="space-y-2">
+          {menuItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.to}
+              onClick={toggleSidebar}
+              className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {item.icon}
+              <span>{item.text}</span>
+            </Link>
+          ))}
+        </nav>
+
+        <div className="mt-auto pt-8 space-y-2">
+          <Link
+            to="/help"
+            onClick={toggleSidebar}
+            className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <HelpCircle className="w-5 h-5" />
+            <span>Help</span>
+          </Link>
+          <button
+            className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            onClick={handleLogoutClick}
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Sign out</span>
+          </button>
+        </div>
       </div>
-      {
-        showLogoutPopup && (
-          <LogoutModal show={showLogoutPopup} setShowLogoutPopup={setShowLogoutPopup}/>
-        )
-      }
+
+      {showLogoutPopup && (
+        <LogoutModal show={showLogoutPopup} setShowLogoutPopup={setShowLogoutPopup} />
+      )}
     </>
   );
 });

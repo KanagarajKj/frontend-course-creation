@@ -121,7 +121,7 @@ const Auth = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 overflow-hidden">
+    <div className="flex flex-col items-center justify-center h-dvh bg-gray-100 p-6 overflow-hidden">
       
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-sm">
       <h2 className="text-2xl font-bold mb-4 text-center">{isLogin ? 'Login' : 'Sign Up'}</h2>
@@ -167,7 +167,7 @@ const Auth = () => {
         <div className="flex items-center justify-center mt-4">
           <button 
             type="button" 
-            className="text-blue-500 hover:text-blue-800"
+            className="text-primary-400 hover:text-primary-800"
             onClick={() => setIsLogin(!isLogin)} 
           >
             {isLogin ? 'Create an account' : 'Already have an account? Login'}
@@ -208,7 +208,7 @@ const Auth = () => {
           />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center cursor-pointer">
           <div
             onClick={loginWithGitHub}
             className="text-sm flex items-center justify-center bg-gray-900 text-white rounded-full w-3/5 py-2 hover:bg-gray-700 transition duration-300"
