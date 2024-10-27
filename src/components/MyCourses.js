@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit2, Trash2, GripVertical, CheckCircle, Eye, Book } from 'lucide-react';
-import TopicEditModal from './Modals/TopicEditModal';
+import TopicAddEditModal from './Modals/TopicAddEditModal';
 import { Link } from 'react-router-dom';
 import { useGetCourseUserByIdQuery } from '../services/courseApi';
-
+import ChapterAddEditModal from './Modals/ChapterAddEditModal';
 
 const MyCourses = () => {
-  const userId = localStorage.getItem('userId'); // Ensure this is the correct userId
+  const userId = localStorage.getItem('userId');
   const { data, error, isLoading } = useGetCourseUserByIdQuery(userId);
 
-  console.log(data,'data')
-
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddEditTopicModalOpen, setIsAddEditTopicModalOpen] = useState(false);
+  const [isAddEditChapterModalOpen, setIsAddEditChapterModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedChapter, setSelectedChapter] = useState(null);
+
   const [courses, setCourses] = useState([
     {
       id: 1,
@@ -32,12 +33,6 @@ const MyCourses = () => {
       ]
     }
   ]);
-
-  // Handler for editing topics
-  const handleEditTopic = (courseId, chapterId, topic) => {
-    setSelectedTopic({ ...topic, courseId, chapterId });
-    setIsEditModalOpen(true);
-  };
 
   // Handler for deleting topics
   const handleDeleteTopic = (courseId, chapterId, topicId) => {
@@ -142,49 +137,63 @@ const MyCourses = () => {
 
   // Add new chapter to a course
   const addChapter = (courseId) => {
-    setCourses(courses.map(course => {
-      if (course.id === courseId) {
-        const newChapter = {
-          id: Date.now(),
-          title: `Chapter ${course.chapters.length + 1}`,
-          isOpen: true,
-          topics: [
-            { id: Date.now(), title: 'New Topic', isCompleted: false }
-          ]
-        };
-        return {
-          ...course,
-          chapters: [...course.chapters, newChapter]
-        };
-      }
-      return course;
-    }));
+    // setCourses(courses.map(course => {
+    //   if (course.id === courseId) {
+    //     const newChapter = {
+    //       id: Date.now(),
+    //       title: `Chapter ${course.chapters.length + 1}`,
+    //       isOpen: true,
+    //       topics: [
+    //         { id: Date.now(), title: 'New Topic', isCompleted: false }
+    //       ]
+    //     };
+    //     return {
+    //       ...course,
+    //       chapters: [...course.chapters, newChapter]
+    //     };
+    //   }
+    //   return course;
+    // }));
+    setIsAddEditChapterModalOpen(true)
+  };
+
+   // Edit chapter to a course
+  const editChapter = (courseId, chapterId, chapter) => {
+    setSelectedChapter(chapter)
+    setIsAddEditChapterModalOpen(true)
   };
 
   // Add new topic to a chapter
   const addTopic = (courseId, chapterId) => {
-    setCourses(courses.map(course => {
-      if (course.id === courseId) {
-        return {
-          ...course,
-          chapters: course.chapters.map(chapter => {
-            if (chapter.id === chapterId) {
-              const newTopic = {
-                id: Date.now(),
-                title: `Topic ${chapter.topics.length + 1}`,
-                isCompleted: false
-              };
-              return {
-                ...chapter,
-                topics: [...chapter.topics, newTopic]
-              };
-            }
-            return chapter;
-          })
-        };
-      }
-      return course;
-    }));
+    // setCourses(courses.map(course => {
+    //   if (course.id === courseId) {
+    //     return {
+    //       ...course,
+    //       chapters: course.chapters.map(chapter => {
+    //         if (chapter.id === chapterId) {
+    //           const newTopic = {
+    //             id: Date.now(),
+    //             title: `Topic ${chapter.topics.length + 1}`,
+    //             isCompleted: false
+    //           };
+    //           return {
+    //             ...chapter,
+    //             topics: [...chapter.topics, newTopic]
+    //           };
+    //         }
+    //         return chapter;
+    //       })
+    //     };
+    //   }
+    //   return course;
+    // }));
+    setIsAddEditTopicModalOpen(true);
+  };
+
+    // Handler for editing topics
+  const handleEditTopic = (courseId, chapterId, topic) => {
+    setSelectedTopic({ ...topic, courseId, chapterId });
+    setIsAddEditTopicModalOpen(true);
   };
 
   // Topic component
@@ -211,7 +220,7 @@ const MyCourses = () => {
           </button>
           <button 
             className="p-1 hover:bg-blue-100 rounded"
-            onClick={() => handleDeleteTopic(courseId, chapterId, topic.id)}
+            // onClick={() => handleDeleteTopic(courseId, chapterId, topic.id)}
             aria-label="Delete topic"
           >
             <Trash2 className="w-4 h-4 text-blue-600" />
@@ -257,7 +266,7 @@ const MyCourses = () => {
                   <h2 className="font-medium text-purple-600">{course.title}</h2>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button 
+                  {/* <button 
                     className="p-1 hover:bg-purple-100 rounded"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -274,7 +283,7 @@ const MyCourses = () => {
                     }}
                   >
                     <Trash2 className="w-4 h-4 text-purple-600" />
-                  </button>
+                  </button> */}
                   {course.isOpen ? (
                     <ChevronUp className="w-5 h-5 text-purple-600" />
                   ) : (
@@ -311,6 +320,7 @@ const MyCourses = () => {
                               className="p-1 hover:bg-red-100 rounded"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                editChapter(course.id, chapter.id, chapter)
                                 // Add chapter edit handler
                               }}
                             >
@@ -320,7 +330,7 @@ const MyCourses = () => {
                               className="p-1 hover:bg-red-100 rounded"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteChapter(course.id, chapter.id);
+                                // handleDeleteChapter(course.id, chapter.id);
                               }}
                             >
                               <Trash2 className="w-4 h-4 text-red-600" />
@@ -362,12 +372,30 @@ const MyCourses = () => {
           ))}
         </div>
       </div>
+
+      {
+        isAddEditTopicModalOpen && (
+          <TopicAddEditModal 
+            isOpen={isAddEditTopicModalOpen} 
+            onClose={() => setIsAddEditTopicModalOpen(false)}
+            topic={selectedTopic}
+          />
+        )
+      }
+
+      {
+        isAddEditChapterModalOpen && (
+          <ChapterAddEditModal 
+            isOpen={isAddEditChapterModalOpen}
+            onClose={() => setIsAddEditChapterModalOpen(false)}
+            chapter={selectedChapter}  // Pass the chapter object with id, title, etc.
+            onSave={(savedChapter) => {
+              // Handle the updated chapter
+              console.log('Chapter updated:', savedChapter);
+            }}
+          />
+        )}
       
-      <TopicEditModal 
-        isOpen={isEditModalOpen} 
-        onClose={() => setIsEditModalOpen(false)}
-        topic={selectedTopic}
-      />
     </div>
   );
 };
