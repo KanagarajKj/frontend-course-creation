@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit2, Trash2, GripVertical, CheckCircle, Eye, Book } from 'lucide-react';
 import TopicEditModal from './Modals/TopicEditModal';
+import { Link } from 'react-router-dom';
 
 const MyCourses = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -224,14 +225,17 @@ const MyCourses = () => {
 
   return (
     <div className="flex-1 p-4 md:p-6 lg:p-8 bg-gray-50 h-dvh overflow-y-scroll">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <button
-          onClick={addCourse}
-          className="w-full sm:w-auto px-4 py-2 text-sm bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors flex items-center justify-center gap-2"
+      <div className="max-w-8xl mx-auto space-y-6">
+        <div className='w-max'>
+          <Link
+          // onClick={addCourse}
+          to="/create-courses"
+          className="px-4 py-2 text-sm bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" />
           <span>Add Course</span>
-        </button>
+        </Link>
+        </div>
 
         <div className="space-y-6">
           {courses.map((course) => (

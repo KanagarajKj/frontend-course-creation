@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useRefreshTokenMutation } from '../services/authApi';
+import { useLogoutMutation, useRefreshTokenMutation } from '../services/authApi';
 import {jwtDecode} from 'jwt-decode';
 import { useGetUserByIdQuery } from '../services/userApi';
 
@@ -26,10 +26,12 @@ const isTokenAboutToExpire = (token) => {
 
 const PrivateRoute = ({ element: Element, ...rest }) => {
     const [refreshToken, { isLoading }] = useRefreshTokenMutation();
+    const [logout] = useLogoutMutation();
     const [isLoadingAuth, setIsLoadingAuth] = useState(true);
     const [redirect, setRedirect] = useState(null);
     const token = localStorage.getItem('token');
     const refreshTokenData = localStorage.getItem('refreshToken');
+    const userId = localStorage.getItem('userId');
     const location = useLocation(); 
 
     const decoded = token ? jwtDecode(token) : null;
@@ -39,9 +41,11 @@ const PrivateRoute = ({ element: Element, ...rest }) => {
         const checkAuth = async () => {
             try {
                 if(token === undefined || token === null) {
+                    await logout(userId);
                     localStorage.clear();
                     setRedirect('/auth');
                 } else if (token && data?.data?.userData?.deviceLoginCount === 0) {
+                    await logout(userId);
                     localStorage.clear();
                     setRedirect('/auth');
                 } else if (location?.pathname === "/" && isAuthenticated()) {

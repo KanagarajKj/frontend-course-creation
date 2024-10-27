@@ -3,8 +3,8 @@ import { Camera, Video, AtSign, Heart, MessageSquare } from 'lucide-react';
 
 const Home = () => {
   return (
-    <div className="w-full max-w-2xl mx-auto p-4">
-      {/* Search Bar */}
+    <div className="w-full max-w-4xl mx-auto p-4">
+        {/* Search Bar */}
       <div className="bg-white rounded-lg shadow mb-6">
         <h1 className="text-xl font-semibold p-4 border-b">Friends.</h1>
         <div className="p-4">
@@ -84,7 +84,7 @@ const Home = () => {
       </div>
 
       {/* Birthday Section - Only visible on larger screens */}
-      <div className="hidden lg:block fixed right-4 top-4 w-64 space-y-4">
+      {/* <div className="hidden lg:block fixed right-4 top-4 w-64 space-y-4">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-gray-100 rounded-full">
@@ -107,7 +107,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
     </div>
   );
 };
