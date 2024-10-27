@@ -2,8 +2,15 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit2, Trash2, GripVertical, CheckCircle, Eye, Book } from 'lucide-react';
 import TopicEditModal from './Modals/TopicEditModal';
 import { Link } from 'react-router-dom';
+import { useGetCourseUserByIdQuery } from '../services/courseApi';
+
 
 const MyCourses = () => {
+  const userId = localStorage.getItem('userId'); // Ensure this is the correct userId
+  const { data, error, isLoading } = useGetCourseUserByIdQuery(userId);
+
+  console.log(data,'data')
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [courses, setCourses] = useState([

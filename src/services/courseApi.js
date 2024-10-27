@@ -1,17 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const userApi = createApi({
+export const courseApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ 
     baseUrl: "http://localhost:5000",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token');
-    
-      // If token exists, add it to the headers
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
       }
-      
       return headers;
     },
   }),
@@ -26,10 +23,14 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    getCourseUserById: builder.query({
+      query: (userId) => `/course/get-course/${userId}`,
+    }),
   }),
 });
 
 export const { 
   useGetUserByIdQuery,
-  usePostCourseMutation
-} = userApi;
+  usePostCourseMutation,
+  useGetCourseUserByIdQuery
+} = courseApi;

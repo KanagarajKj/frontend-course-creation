@@ -4,11 +4,13 @@ import { toast } from "react-toastify";
 import { Upload } from 'lucide-react';
 import { usePostCourseMutation } from '../services/courseApi';
 import PreviewModal from './Modals/PreviewModal';
+import { useNavigate } from 'react-router-dom';
 
 const CreateCourses = () => {
   const [createNewCourse, { isLoading, error, data, isError }] = usePostCourseMutation();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewData, setPreviewData] = useState(null);
+  const navigate = useNavigate();
 
   const { register, handleSubmit, watch, control, formState: { errors }, reset } = useForm({
     defaultValues: {
@@ -35,7 +37,8 @@ const CreateCourses = () => {
   };
 
   const onSubmit = async (data, isDraft = false) => {
-    const newData = Object.assign(data, { isDraft });
+    const userId = localStorage.getItem("userId");
+    const newData = Object.assign(data, { isDraft,userId });
     const createCourse = await createNewCourse({ data: newData });
     if(error?.data?.message) {
       toast.error(error?.data?.message);
@@ -43,6 +46,7 @@ const CreateCourses = () => {
     }
     toast.success("Course created successfully!");
     reset();
+    navigate("/my-courses")
   };
 
   return (
@@ -114,7 +118,7 @@ const CreateCourses = () => {
                       <textarea
                         {...register("description", {
                           required: "Description is required",
-                          minLength: { value: 50, message: "Description must be at least 50 characters" }
+                          minLength: { value: 20, message: "Description must be at least 20 characters" }
                         })}
                         rows="4"
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${errors.description ? 'border-red-500' : 'border-gray-300'}`}

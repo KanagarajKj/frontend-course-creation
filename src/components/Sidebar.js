@@ -21,7 +21,9 @@ const Sidebar = forwardRef(({ isOpen, toggleSidebar }, ref) => {
         ref={ref}
         className={`w-64 min-h-screen bg-white border-r border-gray-200 px-4 py-6 fixed md:relative transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0 top-0' : '-translate-x-full md:translate-x-0'}`}
       >
-        <div className="flex items-center justify-between mb-8">
+        <div className='flex flex-col justify-between h-full '>
+          <div>
+            <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2 text-purple-600">
             <Album className="w-8 h-8" />
             <span className="text-2xl font-bold tracking-wide">COURSE</span>
@@ -48,6 +50,7 @@ const Sidebar = forwardRef(({ isOpen, toggleSidebar }, ref) => {
             </Link>
           ))}
         </nav>
+          </div>
 
         <div className="mt-auto pt-8 space-y-2">
           <Link
@@ -59,12 +62,13 @@ const Sidebar = forwardRef(({ isOpen, toggleSidebar }, ref) => {
             <span>Help</span>
           </Link>
           <button
-            className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
             onClick={handleLogoutClick}
           >
             <LogOut className="w-5 h-5" />
             <span>Sign out</span>
           </button>
+        </div>
         </div>
       </div>
 
