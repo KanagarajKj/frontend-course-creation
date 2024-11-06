@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { toast } from "react-toastify";
 import { Upload } from 'lucide-react';
-import { usePostCourseMutation } from '../services/courseApi';
+import { usePostCourseMutation, useGetCourseUserByIdQuery } from '../services/courseApi';
 import PreviewModal from './Modals/PreviewModal';
 import { useNavigate } from 'react-router-dom';
 
 const CreateCourses = () => {
+  const userId = localStorage.getItem("userId");
   const [createNewCourse, { isLoading, error, data, isError }] = usePostCourseMutation();
+  const { refetch } = useGetCourseUserByIdQuery(userId);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewData, setPreviewData] = useState(null);
   const navigate = useNavigate();
@@ -15,8 +17,8 @@ const CreateCourses = () => {
   const { register, handleSubmit, watch, control, formState: { errors }, reset } = useForm({
     defaultValues: {
       title: '',
-      chapter: 'Data Management',
-      level: 'Basic',
+      category: '',
+      duration: '',
       description: '',
       faq: [{ question: '', answer: '' }],
       coverImage: 'https://images.pexels.com/photos/1128797/pexels-photo-1128797.jpeg?auto=compress&cs=tinysrgb&w=600',
@@ -37,9 +39,9 @@ const CreateCourses = () => {
   };
 
   const onSubmit = async (data, isDraft = false) => {
-    const userId = localStorage.getItem("userId");
     const newData = Object.assign(data, { isDraft,userId });
     const createCourse = await createNewCourse({ data: newData });
+    await refetch();
     if(error?.data?.message) {
       toast.error(error?.data?.message);
       return;
@@ -83,30 +85,25 @@ const CreateCourses = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm text-gray-700 mb-1">
-                          Chapter <span className="text-red-500">*</span>
+                          Category <span className="text-red-500">*</span>
                         </label>
-                        <select
-                          {...register("chapter", { required: "Chapter is required" })}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${errors.chapter ? 'border-red-500' : 'border-gray-300'}`}
-                        >
-                          <option>Data Management</option>
-                          <option>Machine Learning</option>
-                        </select>
-                        {errors.chapter && <p className="mt-1 text-sm text-red-500">{errors.chapter.message}</p>}
+                        <input
+                        {...register("category", { required: "Category is required" })}
+                        placeholder="e.g. Machine Learning"
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
+                        />
+                        {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>}
                       </div>
                       <div>
                         <label className="block text-sm text-gray-700 mb-1">
-                          Level <span className="text-red-500">*</span>
+                          Duration <span className="text-red-500">*</span>
                         </label>
-                        <select
-                          {...register("level", { required: "Level is required" })}
-                          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${errors.level ? 'border-red-500' : 'border-gray-300'}`}
-                        >
-                          <option>Basic</option>
-                          <option>Medium</option>
-                          <option>Advanced</option>
-                        </select>
-                        {errors.level && <p className="mt-1 text-sm text-red-500">{errors.level.message}</p>}
+                        <input
+                        {...register("duration", { required: "Duration is required" })}
+                        placeholder="e.g. 5 Hours"
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent ${errors.duration ? 'border-red-500' : 'border-gray-300'}`}
+                        />
+                        {errors.duration && <p className="mt-1 text-sm text-red-500">{errors.duration.message}</p>}
                       </div>
                     </div>
 

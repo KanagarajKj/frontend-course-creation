@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Plus, Edit2, Trash2, GripVertical, CheckCircle, Eye, Book } from 'lucide-react';
 import TopicAddEditModal from './Modals/TopicAddEditModal';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,7 @@ import ChapterAddEditModal from './Modals/ChapterAddEditModal';
 
 const MyCourses = () => {
   const userId = localStorage.getItem('userId');
-  const { data, error, isLoading } = useGetCourseUserByIdQuery(userId);
+  const { data, error, isLoading, refetch } = useGetCourseUserByIdQuery(userId);
 
   const [isAddEditTopicModalOpen, setIsAddEditTopicModalOpen] = useState(false);
   const [isAddEditChapterModalOpen, setIsAddEditChapterModalOpen] = useState(false);
@@ -33,6 +33,12 @@ const MyCourses = () => {
       ]
     }
   ]);
+
+  useEffect(()=> {
+    if(data?.courseData?.length > 0) {
+      setCourses(data?.courseData)
+    }
+  },[data])
 
   // Handler for deleting topics
   const handleDeleteTopic = (courseId, chapterId, topicId) => {
@@ -241,7 +247,7 @@ const MyCourses = () => {
 
   return (
     <div className="flex-1 p-4 md:p-6 lg:p-8 bg-gray-50 h-dvh overflow-y-scroll">
-      <div className="max-w-8xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         <div className='w-max'>
           <Link
           // onClick={addCourse}
@@ -253,8 +259,10 @@ const MyCourses = () => {
         </Link>
         </div>
 
-        <div className="space-y-6">
-          {courses.map((course) => (
+        {
+          !courses?.length > 0 ? (
+            <div className="space-y-6">
+          {courses?.map((course) => (
             <div key={course.id} className="bg-white rounded-lg shadow-sm overflow-hidden border border-purple-100">
               {/* Course Header */}
               <div
@@ -305,7 +313,7 @@ const MyCourses = () => {
 
                   {/* Chapters */}
                   <div className="space-y-4">
-                    {course.chapters.map((chapter) => (
+                    {/* {course.chapters.map((chapter) => (
                       <div key={chapter.id} className="bg-white rounded-lg shadow-sm border border-red-100">
                         <div
                           className="bg-red-50 p-4 flex items-center justify-between cursor-pointer"
@@ -364,13 +372,19 @@ const MyCourses = () => {
                           </div>
                         )}
                       </div>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
               )}
             </div>
           ))}
         </div>
+          ) : (
+            <>
+              <div className="font-medium text-red-600 text-center">No Courses</div>
+            </>
+          )
+        }
       </div>
 
       {

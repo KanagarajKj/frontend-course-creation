@@ -81,18 +81,18 @@ const PreviewModal = ({ isOpen, setIsOpen, formData }) => {
               <div>
                 <h3 className="font-semibold mb-2">Course Details</h3>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-gray-500">Title</p>
                       <p className="font-medium">{formData?.title || 'Not set'}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Chapter</p>
-                      <p className="font-medium">{formData?.chapter || 'Not set'}</p>
+                      <p className="text-sm text-gray-500">Category</p>
+                      <p className="font-medium">{formData?.category || 'Not set'}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Level</p>
-                      <p className="font-medium">{formData?.level || 'Not set'}</p>
+                      <p className="text-sm text-gray-500">Duration</p>
+                      <p className="font-medium">{`${formData?.duration} Hours` || 'Not set'}</p>
                     </div>
                   </div>
                   <div>
